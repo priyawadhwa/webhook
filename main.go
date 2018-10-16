@@ -8,6 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 	"github.com/priyawadhwa/webhook/pkg/constants"
+	pkggithub "github.com/priyawadhwa/webhook/pkg/github"
 	"github.com/priyawadhwa/webhook/pkg/kubernetes"
 
 	"github.com/google/go-github/github"
@@ -77,7 +78,7 @@ func handlePREvent(event *github.PullRequestEvent) error {
 	if err != nil {
 		return errors.Wrap(err, "creating service from deployment")
 	}
-	return github.CommentOnPR(client, pr, ip)
+	return pkggithub.CommentOnPr(client, event, ip)
 }
 
 func docsLabelExists(labels []*github.Label) bool {

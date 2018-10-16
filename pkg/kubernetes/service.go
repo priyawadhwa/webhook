@@ -57,9 +57,5 @@ func CreateServiceFromDeployment(d *appsv1.Deployment) (string, error) {
 	if err := cmd.Run(); err != nil {
 		return "", err
 	}
-	svc, err := getService(d)
-	if err != nil {
-		return "", errors.Wrap(err, "getting service")
-	}
 	return getExternalIP(d)
 }

@@ -30,7 +30,7 @@ func getDeployment(pr *github.PullRequestEvent) *appsv1.Deployment {
 	d := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:   fmt.Sprintf("docs-controller-deployment-%d", pr.PullRequest.GetNumber()),
-			Labels: depLabels,
+			Labels: labels,
 		},
 		Spec: appsv1.DeploymentSpec{
 			Selector: &metav1.LabelSelector{

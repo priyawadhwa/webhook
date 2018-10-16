@@ -311,7 +311,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:45dfef2f63bde631e0e7c80f97073c94a6792ead321e6974545fe05affc866f9"
+  digest = "1:a5bdd14ed3d3a9bfc59a2304f08e361e7464bf1ca7dc51c9ace13d315ceedd1c"
   name = "k8s.io/apimachinery"
   packages = [
     "pkg/api/errors",
@@ -345,6 +345,7 @@
     "pkg/util/sets",
     "pkg/util/validation",
     "pkg/util/validation/field",
+    "pkg/util/wait",
     "pkg/util/yaml",
     "pkg/version",
     "pkg/watch",
@@ -426,7 +427,9 @@
     "k8s.io/api/apps/v1",
     "k8s.io/api/core/v1",
     "k8s.io/apimachinery/pkg/apis/meta/v1",
+    "k8s.io/apimachinery/pkg/util/wait",
     "k8s.io/client-go/kubernetes",
+    "k8s.io/client-go/kubernetes/typed/apps/v1",
     "k8s.io/client-go/tools/clientcmd",
   ]
   solver-name = "gps-cdcl"

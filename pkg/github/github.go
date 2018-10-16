@@ -15,7 +15,7 @@ const ()
 func CommentOnPr(client *github.Client, pr *github.PullRequestEvent, ip string) error {
 	log.Printf("trying to comment on PR %d now", pr.PullRequest.GetNumber())
 	ctx := context.Background()
-	comment := github.IssueComment{
+	comment := &github.IssueComment{
 		User: &github.User{
 			Name: &[]string{"container-tools-bot"}[0],
 		},
