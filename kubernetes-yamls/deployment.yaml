@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docs
+  labels:
+    run: docs
+spec:
+  selector:
+    matchLabels:
+      run: docs
+  template:
+    metadata:
+      labels:
+        run: docs
+    spec:
+      serviceAccountName: admin-serviceaccount
+      containers:
+      - name: docs
+        image: gcr.io/k8s-skaffold/docs-controller:latest
+        env:
+        - name: GITHUB_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: github-token 
+              key: token
+        ports:
+        - containerPort: 8080

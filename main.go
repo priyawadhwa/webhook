@@ -4,13 +4,18 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/pkg/errors"
+	"github.com/priyawadhwa/webhook/pkg/constants"
+	"github.com/priyawadhwa/webhook/pkg/kubernetes"
 
 	"github.com/google/go-github/github"
 	"golang.org/x/oauth2"
 )
 
 var (
-	githubToken = ""
+	githubToken = os.Getenv("GITHUB_ACCESS_TOKEN")
 
 	client *github.Client
 )
@@ -27,7 +32,7 @@ func main() {
 	// Github is now ready to receive information from us!!!
 
 	//Setup the serve route to receive guthub events
-	http.HandleFunc("/receive", EventHandler)
+	http.HandleFunc("/receive", handleGithubEvent)
 
 	// Start the server
 	log.Println("Listening...")
@@ -35,22 +40,53 @@ func main() {
 }
 
 //This is the event handler for github events.
-func EventHandler(w http.ResponseWriter, r *http.Request) {
-	event_type := r.Header.Get("X-GitHub-Event")
+func handleGithubEvent(w http.ResponseWriter, r *http.Request) {
+	eventType := r.Header.Get("X-GitHub-Event")
 
-	if event_type == "pull_request" {
-		pr_event := new(github.PullRequestEvent)
-
-		json.NewDecoder(r.Body).Decode(pr_event)
-		if pr_event.PullRequest.State != nil {
-
-			log.Printf("Event Type: %s, Created by: %s\n", event_type, pr_event.PullRequest.Base.User.Login)
-
-			log.Println("Handler exiting...")
-		} else {
-			log.Println("PR state not open or reopen")
+	if eventType == constants.PullRequestEvent {
+		prEvent := new(github.PullRequestEvent)
+		if err := json.NewDecoder(r.Body).Decode(prEvent); err != nil {
+			log.Printf("error decoding pr event: %v", err)
 		}
+		log.Printf("found pull request %d", prEvent.GetNumber())
+		if err := handlePREvent(prEvent); err != nil {
+			log.Printf("error handling pr event: %v", err)
+		}
+
+	} else if eventType == constants.LabelEvent {
+		labelEvent := new(github.LabelEvent)
+		if err := json.NewDecoder(r.Body).Decode(labelEvent); err != nil {
+			log.Printf("error decoding label event: %v", err)
+		}
+		log.Print(labelEvent)
 	} else {
-		log.Printf("Event %s not supported yet.\n", event_type)
+		log.Printf("Event %s not supported yet.\n", eventType)
 	}
+}
+
+func handlePREvent(event *github.PullRequestEvent) error {
+	if !docsLabelExists(event.PullRequest.Labels) {
+		log.Printf("label %s not found on PR %d", constants.DocsLabel, event.GetNumber())
+		return nil
+	}
+	d, err := kubernetes.CreateDeployment(event)
+	if err != nil {
+		return errors.Wrap(err, "creating deployment")
+	}
+	ip, err := kubernetes.CreateServiceFromDeployment(d)
+	if err != nil {
+		return errors.Wrap(err, "creating service from deployment")
+	}
+	return github.CommentOnPR(client, pr, ip)
+}
+
+func docsLabelExists(labels []*github.Label) bool {
+	for _, l := range labels {
+		if l != nil {
+			if *l.Name == constants.DocsLabel {
+				return true
+			}
+		}
+	}
+	return false
 }

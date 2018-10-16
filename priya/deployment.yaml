@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: priya
+  labels:
+    priya: docs
+spec:
+  selector:
+    matchLabels:
+      priya: docs
+  template:
+    metadata:
+      labels:
+        priya: docs
+    spec:
+      serviceAccountName: admin-serviceaccount
+      containers:
+      - name: docs
+        image: gcr.io/priya-wadhwa/docs
+        args: ["hugo", "server", "--bind=0.0.0.0", "-D"]
+        ports:
+        - containerPort: 1313
