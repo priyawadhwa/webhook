@@ -30,6 +30,7 @@ func main() {
 
 	// Get a client instance from github
 	client = github.NewClient(tc)
+	client.UserAgent = "container-tools-bot"
 	// Github is now ready to receive information from us!!!
 
 	//Setup the serve route to receive guthub events
