@@ -94,7 +94,7 @@ func handlePREvent(event *github.PullRequestEvent) error {
 		return nil
 	}
 
-	log.Printf("Received event for pull request %d", prEvent.GetNumber())
+	log.Printf("Received event for pull request %d", event.GetNumber())
 
 	if !docsLabelExists(event.PullRequest.Labels) {
 		log.Printf("Label %s not found on PR %d", constants.DocsLabel, event.GetNumber())
