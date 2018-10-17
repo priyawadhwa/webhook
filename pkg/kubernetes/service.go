@@ -2,7 +2,6 @@ package kubernetes
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/pkg/errors"
@@ -50,7 +49,6 @@ func getExternalIP(d *appsv1.Deployment) (string, error) {
 		return "", err
 	}
 	ip := svc.Status.LoadBalancer.Ingress[0].IP
-	log.Printf("Returning ip address %s:1313 for service %s", ip, serviceName(d))
 	return fmt.Sprintf("%s:%s", ip, "1313"), nil
 }
 

@@ -17,8 +17,9 @@ const (
 func CommentOnPr(client *github.Client, pr *github.PullRequestEvent, ip string) error {
 	log.Printf("trying to comment on PR %d now", pr.PullRequest.GetNumber())
 	ctx := context.Background()
+	ip = fmt.Sprintf("http://%s", ip)
 	comment := &github.IssueComment{
-		Body: &[]string{fmt.Sprintf("Please visit %s to view changes to the docs.", ip)}[0],
+		Body: &[]string{fmt.Sprintf("Please visit [%s](%s) to view changes to the docs.", ip, ip)}[0],
 	}
 
 	log.Printf("Creating comment on %s %s %d", owner, *pr.Repo.Name, pr.PullRequest.GetNumber())

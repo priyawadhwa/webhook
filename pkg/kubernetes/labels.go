@@ -13,3 +13,7 @@ func generateLabelsFromPullRequestEvent(pr *github.PullRequestEvent) map[string]
 	labels["docs-controller-deployment"] = "true"
 	return labels
 }
+
+func getPRLabel(prNumber int) string {
+	return fmt.Sprintf("deployment=docs-controller-deployment-%d", prNumber)
+}
