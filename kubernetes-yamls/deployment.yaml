@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: docs
+  name: docs-controller
   labels:
     run: docs
 spec:
@@ -15,7 +15,7 @@ spec:
     spec:
       serviceAccountName: admin-serviceaccount
       containers:
-      - name: docs
+      - name: docs-controller
         image: gcr.io/k8s-skaffold/docs-controller:latest
         env:
         - name: GITHUB_ACCESS_TOKEN

@@ -52,17 +52,6 @@ func handleGithubEvent(w http.ResponseWriter, r *http.Request) {
 		if err := handlePREvent(prEvent); err != nil {
 			log.Printf("error handling pr event: %v", err)
 		}
-
-		// } else if eventType == constants.LabelEvent {
-		// 	labelEvent := new(github.LabelEvent)
-		// 	if err := json.NewDecoder(r.Body).Decode(labelEvent); err != nil {
-		// 		log.Printf("error decoding label event: %v", err)
-		// 	}
-		// 	log.Println("label event")
-		// 	if err := handleLabelEvent(labelEvent); err != nil {
-		// 		log.Printf("error handling label event: %v", err)
-		// 	}
-
 	}
 }
 
@@ -105,16 +94,16 @@ func handlePREvent(event *github.PullRequestEvent) error {
 		return errors.Wrap(err, "cleaning up")
 	}
 
-	log.Printf("Found %s label on pull request %d, creating deployment", constants.DocsLabel, event.GetNumber())
-
-	d, err := kubernetes.CreateDeployment(event)
-	if err != nil {
-		return errors.Wrap(err, "creating deployment")
-	}
-	log.Printf("Creating service from deployment %s", d.Name)
-	ip, err := kubernetes.CreateServiceFromDeployment(d)
+	log.Printf("Found %s label on pull request %d, creating service for pull request %d", constants.DocsLabel, event.GetNumber(), event.GetNumber())
+	ip, err := kubernetes.CreateService(event)
 	if err != nil {
 		return errors.Wrap(err, "creating service from deployment")
+	}
+
+	log.Printf("Creating deployment for pull request %d", event.GetNumber())
+
+	if err := kubernetes.CreateDeployment(event, ip); err != nil {
+		return errors.Wrap(err, "creating deployment")
 	}
 
 	log.Printf("Commenting on PR %d that IP %s is ready", event.GetNumber(), ip)

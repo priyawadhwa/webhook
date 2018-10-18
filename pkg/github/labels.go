@@ -9,14 +9,6 @@ import (
 	"github.com/priyawadhwa/webhook/pkg/constants"
 )
 
-type Client struct {
-	*github.Client
-}
-
-func NewGithubClient() {
-
-}
-
 func RemoveDocsLabel(client *github.Client, pr *github.PullRequestEvent) error {
 	log.Printf("Removing docs label from PR %d", pr.PullRequest.GetNumber())
 	ctx := context.Background()
