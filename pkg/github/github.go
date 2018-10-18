@@ -16,7 +16,6 @@ const (
 
 // CommentOnPr comments on the PR to visit IP to see changes to docs
 func CommentOnPr(client *github.Client, pr *github.PullRequestEvent, ip string) error {
-	log.Printf("trying to comment on PR %d now", pr.PullRequest.GetNumber())
 	ctx := context.Background()
 	url := util.GetWebsiteURL(ip)
 	comment := &github.IssueComment{
