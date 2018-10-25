@@ -12,6 +12,7 @@ spec:
     metadata:
       labels:
         run: docs
+        docs-controller: true
     spec:
       serviceAccountName: admin-serviceaccount
       containers:

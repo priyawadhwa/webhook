@@ -22,7 +22,7 @@ import (
 )
 
 const (
-	image        = "gcr.io/priya-wadhwa/hugo@sha256:29a9ef0427218772b3d6a982feac3d855b1949cc78326ad1aeea8af32fa2ba38"
+	image        = "gcr.io/priya-wadhwa/hugo@sha256:37e39b894df8cd9903a3be5ecc03e423bb21038a384221a955d7ce29f66942ef"
 	repo         = "https://github.com/GoogleContainerTools/skaffold.git"
 	emptyVol     = "empty-vol"
 	emptyVolPath = "/empty"

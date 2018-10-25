@@ -1,0 +1,6 @@
+apiVersion: skaffold/v1alpha4
+kind: ""
+deploy:
+  kubectl:
+    manifests:
+    - kubernetes-yamls/setup.yaml

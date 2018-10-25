@@ -1,0 +1,1 @@
+{"steps":[{"args":["gcloud","container","clusters","get-credentials","docs","--zone","us-central1-a","--project","priya-wadhwa"],"name":"gcr.io/k8s-skaffold/skaffold:v0.15.0"},{"args":["skaffold","run"],"name":"gcr.io/k8s-skaffold/skaffold:v0.15.0"}]}
